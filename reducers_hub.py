@@ -29,6 +29,11 @@ def build_entries(root_dir: Path = ROOT_DIR) -> list[ReducerHubEntry]:
     harmonic_ready = (harmonic_path / "main_menu.py").exists()
     logarithmic_path = root_dir / "Logarithmic Drive"
     logarithmic_ready = (logarithmic_path / "main_menu.py").exists()
+    novel_path = root_dir / "Novel Reducers"
+    novel_ready = (novel_path / "main_menu.py").exists()
+    novel_count = len(list(novel_path.glob("*.py"))) - len(
+        list(novel_path.glob("main_menu.py")) + list(novel_path.glob("novel_demo_common.py"))
+    ) if novel_path.exists() else 0
 
     return [
         ReducerHubEntry(
@@ -74,6 +79,19 @@ def build_entries(root_dir: Path = ROOT_DIR) -> list[ReducerHubEntry]:
             path=logarithmic_path,
             launch_target=None,
             status="Ready" if logarithmic_ready else "Empty",
+        ),
+        ReducerHubEntry(
+            title="Novel Reducers",
+            description=(
+                f"Animated, customizable demos of unusual reducers and motion mechanisms — "
+                f"currently {novel_count} mechanisms (gerotor, capstan, elliptical gears, Geneva "
+                f"drive, friction CVT, Antikythera anomaly) with sliders and DXF export."
+                if novel_ready
+                else "Reserved for novel reducer and mechanism demos."
+            ),
+            path=novel_path,
+            launch_target=None,
+            status="Ready" if novel_ready else "Empty",
         ),
     ]
 

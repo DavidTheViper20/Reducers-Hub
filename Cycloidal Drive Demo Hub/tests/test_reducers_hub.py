@@ -24,12 +24,14 @@ class ReducersHubTests(unittest.TestCase):
                 "Planetary",
                 "Harmonic",
                 "Logarithmic Drive",
+                "Novel Reducers",
             ],
         )
         self.assertEqual(entries[0].status, "Ready")
         self.assertEqual(entries[1].status, "Ready")
         self.assertEqual(entries[2].status, "Ready")
         self.assertEqual(entries[3].status, "Ready")
+        self.assertEqual(entries[4].status, "Ready")
 
     def test_parent_hub_can_load_embedded_family_pages(self):
         reducers_root = Path(__file__).resolve().parents[2]
@@ -45,11 +47,13 @@ class ReducersHubTests(unittest.TestCase):
         planetary_builder = module.load_family_page_builder(entries[1])
         harmonic_builder = module.load_family_page_builder(entries[2])
         logarithmic_builder = module.load_family_page_builder(entries[3])
+        novel_builder = module.load_family_page_builder(entries[4])
 
         self.assertTrue(callable(cycloidal_builder))
         self.assertTrue(callable(planetary_builder))
         self.assertTrue(callable(harmonic_builder))
         self.assertTrue(callable(logarithmic_builder))
+        self.assertTrue(callable(novel_builder))
 
 
 if __name__ == "__main__":

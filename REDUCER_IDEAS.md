@@ -7,6 +7,17 @@ are to animate as 2D parametric geometry (matplotlib + DXF export).
 Already implemented: **cycloidal drive, harmonic (strain-wave) drive,
 logarithmic drive, planetary gear drive, Wolfrom cycloidal-planetary**.
 
+## 🟢 Built — "Novel Reducers" family (`Novel Reducers/`)
+Six animated, slider-driven, DXF-exporting demos, launched from the parent
+Reducers Hub. All share `novel_demo_common.py` (auto-fitting plot, slider stack,
+reset / export / open-files, animation loop):
+1. **Gerotor / Trochoidal Pump** — inner N-lobe rotor enveloping N+1 outer teeth.
+2. **Capstan / Cable Drive** — kinematic ratio + Euler grip law.
+3. **Non-Circular (Elliptical) Gears** — twin ellipses rolling about their foci.
+4. **Geneva Drive (Maltese Cross)** — intermittent indexing with dwell.
+5. **Friction Wheel-on-Disc CVT** — variable ratio with reverse / neutral.
+6. **Antikythera Pin-and-Slot Lunar Anomaly** — variable output from offset centers.
+
 ---
 
 ## ✅ Shortlisted / Approved (build these)
