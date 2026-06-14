@@ -87,8 +87,65 @@ train, SRI **Abacus** pure-rolling drive.
 
 ---
 
-## 🆕 Research round 2 (in progress)
-New territory being explored: non-circular/elliptical gears, intermittent motion
-(Geneva/ratchet/escapements), traction/friction CVTs, linkage-based mechanisms
-(Strandbeest/Chebyshev/Peaucellier), and historical/horological gearing
-(Antikythera, south-pointing chariot). Findings to be appended here.
+## 🆕 Research round 2 — new territory (broader "cool mechanisms")
+
+Ranked by coolness × clean-2D-parametric fit. Many of these are *better* 2D fits
+than classic reducers because they're inherently planar.
+
+### ⭐ Top new picks (Easy, build-ready)
+
+- **Non-circular / twin-elliptical gears** — Easy, *striking* variable-ratio
+  visual. Pitch ellipse r(θ)=a(1−e²)/(1+e·cosθ); twin pair needs no integration.
+  ONE general engine — define ratio function i(φ), integrate conjugate
+  φ2=∫ r1/(C−r1) dφ, space teeth by arc length — covers ellipse, eccentric,
+  N-lobed, and sine/function-generating gears as presets. Highest feature-per-
+  effort of the whole round. Refs: Litvin; https://sjsutst.polsl.pl/archives/2019/vol104/095_SJSUTST104_2019_Malakova.htm
+- **Geneva drive (Maltese cross)** — Easy, iconic (film projectors). Exact
+  geometry, verified: index = 360/n; slot angle ≈ 2·(90−180/n); center distance
+  C = R_crank/sin(180/n); pin radius = C·cos(180/n); tangential entry required.
+  4-slot external = 90° move / 270° dwell. Ref: https://en.wikipedia.org/wiki/Geneva_drive
+- **Friction wheel-on-disc CVT** — Easy "hero" demo. Tiny circle translating
+  across a big disc; live readout ratio = R_contact/r_wheel, with direction
+  reversal through center (geared neutral). Ref: https://www.firgelliauto.com/blogs/mechanisms/friction-disc-and-roller
+- **Scotch yoke** — Easy, closed-form, exact SHM: x = R·sinθ, a = −Rω²·sinθ
+  (no 2nd harmonic, unlike slider-crank). Ref: https://en.wikipedia.org/wiki/Scotch_yoke
+
+### ⭐ Story-rich / showpieces (Medium–Hard, high payoff)
+
+- **Antikythera pin-and-slot lunar anomaly** — Medium. The best story in the
+  history of machines, and genuinely planar: two offset circles + pin-in-slot →
+  variable angular velocity. Metonic 235 months / 19 years. Ref: Freeth et al.
+- **Strandbeest / Jansen 11-bar leg** — Hard but a viral showpiece. "Holy
+  numbers" a:38 b:41.5 c:39.3 d:40.1 e:55.8 f:39.4 g:36.7 h:65.7 i:49 j:50
+  k:61.9, crank m:15 (proportions; uniform scaling OK). Needs a numeric
+  loop-closure solver. Ref: https://en.wikipedia.org/wiki/Jansen%27s_linkage
+- **Fusee (clockwork constant-torque spiral)** — Easy–Medium. Spiral cone
+  profile + migrating chain; geometry-solves-physics tale. radius ∝ 1/spring-torque.
+- **Orrery** — Easy. Concentric coplanar trains; tooth ratios approximate
+  planetary period ratios (Earth:Mars ≈ 8:15).
+
+### Reusable engines worth building once (unlock whole families)
+- **Two-circle-intersection loop-closure solver** → unlocks Chebyshev/Hoeken
+  (4-bar straight-line), Watt's linkage, Klann, and Jansen walkers.
+- **Conjugate-curve integrator** (φ2=∫ r1/(C−r1) dφ) → unlocks every
+  non-circular gear (ellipse / eccentric / lobed / sine).
+
+### Other solid candidates from round 2
+- Internal Geneva (smoother, 270/90), ratchet-and-pawl, mutilated/intermittent
+  gears, star wheels — all Easy–Medium, planar.
+- NuVinci ball-and-ring & toroidal (Extroid) CVT — Medium, animate as a 2D
+  cross-section with a tilting ball/roller; 1:1 at the 45° symmetric pose.
+  (NuVinci efficiency figures ~70–89% are unofficial — present as estimates.)
+- Kopp/cone variator, planetary traction-roller reducer — Easy–Medium.
+- Straight-line linkage family (Watt → Chebyshev → Hoeken → Peaucellier, exact
+  via inversion OP×OQ=const), Klann walker — Medium–Hard.
+- Quick-return (Whitworth): time ratio = α/(360−α), ~2:1 — Medium.
+- Schmidt offset coupling: constant 1:1 across parallel offset — Medium.
+- Curta stepped-drum calculator — Medium, developed-view staircase profile.
+
+### ⚠️ 3D / schematic-only (round 2)
+Clock escapements: anchor/recoil & deadbeat (Medium), Swiss lever 15-tooth +
+fork (Medium–Hard), grasshopper (Hard). Automotive differential & differential-
+as-adder (same mechanism: ω_L+ω_R = 2·ω_carrier — pair them as one
+"differential = mechanical +" concept piece) and south-pointing chariot — all
+use 3D bevels, do as cutaway/top-down schematics.
