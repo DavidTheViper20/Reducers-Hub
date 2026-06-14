@@ -623,18 +623,41 @@ dxf_status_text = fig.text(sidebar_x, 0.020, DXF_UNITS_LABEL, fontsize=8, ha="le
 status_text = fig.text(sidebar_x, 0.008, "", fontsize=8, color="#444444")
 
 
-def export_single_stage_dxf(g: StageGeometry, stage_label: str, output_path: Path):
-    """Write one stage to a DXF file."""
+def export_single_stage_dxf(
+    g: StageGeometry,
+    stage_label: str,
+    output_path: Path,
+    phi: float = 0.0,
+    ring_world_angle: float = 0.0,
+):
+    """Write one stage (one reducer) to its own DXF file.
+
+    The geometry is generated for the supplied ``phi`` (input angle) and then
+    rotated by ``ring_world_angle`` so the exported drawing matches exactly the
+    pose that stage is drawn in on the plot. Stage 1 uses ``ring_world_angle=0``
+    (fixed outer ring); Stage 2 uses the slow Wolfrom output-ring angle.
+    """
     if ezdxf is None:
         raise RuntimeError("DXF export requires the ezdxf package.")
 
-    phi = 0.0
+    # Geometry in the stage's local mesh frame, using the correct demo_14 angles
+    inner_x, inner_y = get_inner_curve_points(g, phi=phi, extra_world_angle=0.0)
+    outer_x, outer_y = get_outer_curve_points(g, phi=phi, output_ring_angle=0.0)
+    pin_centers = get_outer_pin_centers(g, phi=phi)
+    drive_centers = get_drive_pin_centers(g, phi=phi)
 
-    # Geometry at phi=0 (starting pose), using correct local angles
-    inner_x, inner_y = get_inner_curve_points(g, phi=0.0, extra_world_angle=0.0)
-    outer_x, outer_y = get_outer_curve_points(g, phi=0.0, output_ring_angle=0.0)
-    pin_centers = get_outer_pin_centers(g, phi=0.0)
-    drive_centers = get_drive_pin_centers(g, phi=0.0)
+    # Rotate the whole stage into its displayed world pose (matches the plot).
+    if abs(ring_world_angle) > EPS:
+        inner_x, inner_y = rotate_xy(inner_x, inner_y, ring_world_angle)
+        outer_x, outer_y = rotate_xy(outer_x, outer_y, ring_world_angle)
+        pin_centers = [
+            tuple(float(v) for v in rotate_xy(cx, cy, ring_world_angle))
+            for cx, cy in pin_centers
+        ]
+        drive_centers = [
+            tuple(float(v) for v in rotate_xy(cx, cy, ring_world_angle))
+            for cx, cy in drive_centers
+        ]
 
     doc = ezdxf.new(setup=True)
     doc.units = ezdxf.units.MM
@@ -727,8 +750,20 @@ def handle_export(event):
         path1 = export_dir / f"{base_name}_Stage1.dxf"
         path2 = export_dir / f"{base_name}_Stage2.dxf"
 
-        export_single_stage_dxf(g1, "Stage 1", path1)
-        export_single_stage_dxf(g2, "Stage 2", path2)
+        # Match the live plot pose: Stage 1 ring is fixed, Stage 2 ring carries
+        # the slow Wolfrom output-ring angle (same maths as animate()).
+        phi = input_angle
+        total = wolfrom_total_ratio(g1, g2)
+        if np.isinf(total) or abs(total) < EPS:
+            output_ring_angle = 0.0
+        else:
+            output_ring_angle = OUTPUT_VISUAL_SIGN * phi / total
+
+        # Two reducers shown on the plot -> two separate DXF files.
+        export_single_stage_dxf(g1, "Stage 1", path1, phi=phi, ring_world_angle=0.0)
+        export_single_stage_dxf(
+            g2, "Stage 2", path2, phi=phi, ring_world_angle=output_ring_angle
+        )
 
         last_export_path = path1
         display = str(export_dir).replace(str(Path.home()), "~", 1)
